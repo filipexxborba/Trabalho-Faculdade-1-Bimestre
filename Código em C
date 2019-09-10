@@ -1,0 +1,569 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+#include <math.h>
+
+char tabuleiro_jogo[3][3];
+int menu,  status_jogo, jogador_vez, primeiro_jogador, coluna, linha, status_jogador, numero_jogadas, ganhador, status_computador;
+int possivel_ganhar, possivel_bloquear, possivel_triangulo, centro, cantos;
+
+int cabecalhoMain(){
+    system("cls");
+	puts("\t\t=================================================================================");
+	puts("");
+	puts("\t\tVVVV         VVVV  EEEEEEEEEEEEEEE  LLLL           HHHH    HHHH      AAAAAAAA");
+	puts("\t\tVVVV         VVVV  EEEE  	    LLLL 	   HHHH    HHHH     AAAA  AAAA ");
+ 	puts("\t\t VVVV       VVVV   EEEEEEEEEEE      LLLL           HHHH    HHHH    AAAA    AAAA");
+ 	puts("\t\t VVVV       VVVV   EEEE		    LLLL	   HHHHHHHHHHHH    AAAA    AAAA");
+  	puts("\t\t  VVVV     VVVV    EEEE		    LLLL	   HHHHHHHHHHHH    AAAAAAAAAAAA");
+   	puts("\t\t   VVVV   VVVV     EEEE		    LLLL 	   HHHH    HHHH   AAAAAAAAAAAAAA");
+    puts("\t\t    VVVV VVVV      EEEE		    LLLLLLLLLLLLL  HHHH    HHHH   AAAA      AAAA");
+    puts("\t\t       VVV         EEEEEEEEEEEEEEE  LLLLLLLLLLLLL  HHHH    HHHH  AAAA        AAAA");
+	puts("");
+    puts("\t\t=================================================================================");
+    puts("");
+    puts("\t\t1 - Iniciar um novo jogo...");
+    puts("\t\t2 - Sair do jogo...");
+    puts("");
+
+}
+
+int cabecalhoJogo(){
+    system("cls");
+    puts("\t\t=================================================================================");
+	puts("");
+	puts("\t\tVVVV         VVVV  EEEEEEEEEEEEEEE  LLLL           HHHH    HHHH      AAAAAAAA");
+	puts("\t\tVVVV         VVVV  EEEE  	    LLLL 	   HHHH    HHHH     AAAA  AAAA ");
+ 	puts("\t\t VVVV       VVVV   EEEEEEEEEEE      LLLL           HHHH    HHHH    AAAA    AAAA");
+ 	puts("\t\t VVVV       VVVV   EEEE		    LLLL	   HHHHHHHHHHHH    AAAA    AAAA");
+  	puts("\t\t  VVVV     VVVV    EEEE		    LLLL	   HHHHHHHHHHHH    AAAAAAAAAAAA");
+   	puts("\t\t   VVVV   VVVV     EEEE		    LLLL 	   HHHH    HHHH   AAAAAAAAAAAAAA");
+    puts("\t\t    VVVV VVVV      EEEE		    LLLLLLLLLLLLL  HHHH    HHHH   AAAA      AAAA");
+    puts("\t\t       VVV         EEEEEEEEEEEEEEE  LLLLLLLLLLLLL  HHHH    HHHH  AAAA        AAAA");
+	puts("");
+    puts("\t\t=================================================================================");
+    puts("");
+}
+
+char jogoVelha(){
+    puts("");
+    printf("\t\t\t\t\t\t %c | %c | %c \n", tabuleiro_jogo[0][0], tabuleiro_jogo[0][1], tabuleiro_jogo[0][2]);
+    printf("\t\t\t\t\t\t-----------\n");
+    printf("\t\t\t\t\t\t %c | %c | %c \n", tabuleiro_jogo[1][0], tabuleiro_jogo[1][1], tabuleiro_jogo[1][2]);
+    printf("\t\t\t\t\t\t-----------\n");
+    printf("\t\t\t\t\t\t %c | %c | %c\n\n", tabuleiro_jogo[2][0], tabuleiro_jogo[2][1], tabuleiro_jogo[2][2]);
+    puts("");
+}
+
+int resetarJogo(){
+    tabuleiro_jogo[0][0] = ' ';
+    tabuleiro_jogo[0][1] = ' ';
+    tabuleiro_jogo[0][2] = ' ';
+    tabuleiro_jogo[1][0] = ' ';
+    tabuleiro_jogo[1][1] = ' ';
+    tabuleiro_jogo[1][2] = ' ';
+    tabuleiro_jogo[2][0] = ' ';
+    tabuleiro_jogo[2][1] = ' ';
+    tabuleiro_jogo[2][2] = ' ';
+
+    status_jogador = 0;
+    status_jogo = 0;
+    status_computador = 0;
+    possivel_ganhar = 0;
+    possivel_bloquear = 0;
+    possivel_triangulo = 0;
+    centro = 0;
+    cantos = 0;
+    numero_jogadas = 0;
+}
+
+int verificaJogo(){
+    /* EMPATE */
+
+if(numero_jogadas % 9 == 0){
+	status_jogo = 1;
+	ganhador = 3;
+}
+
+/* VITÓRIA PLAYER */
+
+if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[0][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[1][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[2][1] == 'X' && tabuleiro_jogo[2][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[2][0] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][1] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[1][2] == 'X' && tabuleiro_jogo[2][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[0][2] == 'X'){
+	status_jogo = 1;
+	ganhador = 1;
+}
+
+/* VITÓRIA COMPUTADOR */
+
+if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[0][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[1][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[2][1] == 'O' && tabuleiro_jogo[2][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[2][0] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][1] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[1][2] == 'O' && tabuleiro_jogo[2][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][2] == 'O'){
+	status_jogo = 1;
+	ganhador = 2;
+}
+
+}
+
+int jogadorJoga(){
+    do{
+        cabecalhoJogo();
+        jogoVelha();
+        puts("\t\tDigite a coluna e a linha que você deseja preencher: [coluna],[linha]");
+        printf("\t\t");
+        scanf("%d, %d", &coluna, &linha);
+
+        if(tabuleiro_jogo[coluna - 1][linha - 1] == ' '){
+            tabuleiro_jogo[coluna-1][linha-1] = 'X';
+            status_jogador = 1;
+        }
+        else{
+            cabecalhoJogo();
+            jogoVelha();
+            puts("MOVIMENTO INVÁLIDO!");
+            getch();
+        }
+    }while(status_jogador == 0);
+    status_jogador = 0;
+}
+
+int computadorJoga(){
+    do{
+        if(status_computador == 0){
+            /* -- GANHAR JOGO -- */
+        /* LINHAS */
+        if(tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[0][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[1][2] == 'O' && tabuleiro_jogo[1][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[1][2] == 'O' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[1][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[2][1] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[2][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[2][1] == 'O' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+
+        /* COLUNAS */
+
+        if(tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[1][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[1][0] == 'O' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][1] == 'O' && tabuleiro_jogo[0][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[2][1] == 'O' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][1] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][2] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[1][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[1][2] == 'O' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+
+        /* DIAGONAIS */
+
+        if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[2][2] == 'O' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+    tabuleiro_jogo[2][0] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[0][2] == 'O' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+    tabuleiro_jogo[1][1] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'O' && tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+    tabuleiro_jogo[0][2] = 'O';
+    status_computador = 1;
+    possivel_ganhar = 1;
+}
+        }
+
+        /* -- BLOQUEAR -- */
+        if(possivel_ganhar == 0 && status_computador == 0){
+
+        if(tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[0][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[1][2] == 'X' && tabuleiro_jogo[1][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[1][2] == 'X' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[1][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[2][1] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[2][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[2][1] == 'X' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+
+        /* COLUNAS */
+
+        if(tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[1][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[1][0] == 'X' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][1] == 'X' && tabuleiro_jogo[0][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[2][1] == 'X' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0) {
+        tabuleiro_jogo[1][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][1] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][2] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[1][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[1][2] == 'X' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+
+        /* DIAGONAIS */
+
+        if(tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[2][2] == 'X' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[0][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+        tabuleiro_jogo[2][0] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[0][2] == 'X' && tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+        tabuleiro_jogo[1][1] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        if(tabuleiro_jogo[2][0] == 'X' && tabuleiro_jogo[1][1] == 'X' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+        tabuleiro_jogo[0][2] = 'O';
+        status_computador = 1;
+        possivel_bloquear = 1;
+}
+        }
+        if(possivel_bloquear == 0 && possivel_ganhar == 0 && status_computador == 0){
+            /* -- FAZER TRIÂNGULOS -- */
+            if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][0] == ' ' && tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+            tabuleiro_jogo[0][0] = 'O';
+            status_computador = 1;
+            possivel_triangulo = 1;
+}
+            if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][0] == ' ' && tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+            tabuleiro_jogo[0][0] = 'O';
+            status_computador = 1;
+            possivel_triangulo = 1;
+}
+            if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[0][2] == ' ' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+            tabuleiro_jogo[0][2] = 'O';
+            status_computador = 1;
+            possivel_triangulo = 1;
+}
+            if(tabuleiro_jogo[1][1] == 'O' && tabuleiro_jogo[2][0] == ' ' && tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+            tabuleiro_jogo[2][0] = 'O';
+            status_computador = 1;
+            possivel_triangulo = 1;
+}
+        }
+        if(possivel_triangulo == 0 && possivel_bloquear == 0 && possivel_ganhar == 0 && status_computador == 0){
+                if(tabuleiro_jogo[1][1] == ' ' && status_computador == 0){
+                    tabuleiro_jogo[1][1] = 'O';
+                    status_computador = 1;
+                    centro = 1;
+                }
+            }
+        if(centro == 0 && possivel_bloquear == 0 && possivel_ganhar == 0 && possivel_triangulo == 0 && status_computador == 0){
+                    if(tabuleiro_jogo[0][0] == ' ' && status_computador == 0){
+                        tabuleiro_jogo[0][0] = 'O';
+                        status_computador = 1;
+                    }
+                    if(tabuleiro_jogo[0][2] == ' ' && status_computador == 0){
+                        tabuleiro_jogo[0][2] = 'O';
+                        status_computador = 1;
+                    }
+                    if(tabuleiro_jogo[2][0] == ' ' && status_computador == 0){
+                        tabuleiro_jogo[2][0] = 'O';
+                        status_computador = 1;
+                    }
+                    if(tabuleiro_jogo[2][2] == ' ' && status_computador == 0){
+                        tabuleiro_jogo[2][2] = 'O';
+                        status_computador = 1;
+                    }
+                }
+
+    }while(status_computador == 0);
+    status_computador = 0;
+    possivel_ganhar = 0;
+    possivel_bloquear = 0;
+    possivel_triangulo = 0;
+    centro = 0;
+    cantos = 0;
+}
+
+int main(){
+    setlocale(LC_ALL, "Portuguese");
+    primeiro_jogador = rand() % 2;
+
+    do{
+
+    cabecalhoMain();
+    printf("\t\tDigite o que você deseja fazer: ");
+    scanf("%d", &menu);
+    if(menu == 1){
+
+           if(primeiro_jogador == 0){
+            jogador_vez = 0;
+           }
+           if(primeiro_jogador == 1){
+            jogador_vez = 1;
+           }
+        resetarJogo();
+
+        do{
+        cabecalhoJogo();
+        jogoVelha();
+
+        if(jogador_vez % 2 == 0){ /* COMPUTADOR */
+            computadorJoga();
+            jogador_vez++;
+            numero_jogadas++;
+        }
+        else{ /* PLAYER */
+            jogadorJoga();
+            jogador_vez++;
+            numero_jogadas++;
+        }
+        verificaJogo();
+        }while(status_jogo == 0);
+        cabecalhoJogo();
+        jogoVelha();
+        if(ganhador == 1){
+            puts("O JOGADOR 'X' GANHOU!");
+            getch();
+        }
+        if(ganhador == 2){
+            puts("O JOGADOR 'O' GANHOU!");
+            getch();
+        }
+        if(ganhador == 3){
+            puts("EMPATE!");
+            getch();
+        }
+    }
+}while(menu == 1);
+}
